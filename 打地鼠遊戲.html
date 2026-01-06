@@ -1,175 +1,144 @@
 <!DOCTYPE html>
-<!-- saved from url=(0071)file:///C:/Users/User/Downloads/whack_a_mole_advanced_school%20(1).html -->
-<html lang="zh-TW" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
-  <title>打地鼠遊戲（進階作業版）</title>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>打地鼠遊戲</title>
   <style>
     body {
-      font-family: "Noto Sans TC", Arial, sans-serif;
+      font-family: Arial, sans-serif;
       text-align: center;
-      background: #eef6ff;
+      background: #f5f5f5;
     }
-    h1 { margin-top: 20px; }
-    .info { font-size: 18px; margin: 6px; }
-    .panel {
-      background: #ffffff;
-      width: 85%;
-      margin: 10px auto;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    h1 {
+      margin-top: 20px;
+    }
+    #score {
+      font-size: 24px;
+      margin: 10px;
     }
     .game {
       display: grid;
       grid-template-columns: repeat(3, 120px);
       grid-gap: 15px;
       justify-content: center;
-      margin: 20px auto;
+      margin-top: 30px;
     }
     .hole {
       width: 120px;
       height: 120px;
-      background: #9b7653;
+      background: #8b5a2b;
       border-radius: 50%;
       position: relative;
       cursor: pointer;
+      overflow: hidden;
     }
     .mole {
       width: 80px;
       height: 80px;
-      background: #ffcc66;
-      border-radius: 50%;
       position: absolute;
       bottom: 10px;
       left: 20px;
       display: none;
-      font-size: 40px;
-      line-height: 80px;
     }
-    .hole.active .mole { display: block; }
-    button, select {
-      padding: 8px 15px;
-      font-size: 15px;
-      margin: 5px;
-      border-radius: 8px;
-      border: none;
+    .mole img {
+      width: 100%;
+      height: 100%;
     }
-    button {
-      background: #4a90e2;
-      color: white;
-      cursor: pointer;
+    .hole.active .mole {
+      display: block;
+    }
+
+    /* 出現動畫 */
+    @keyframes popUp {
+      from {
+        transform: translateY(20px) scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* 被打動畫 */
+    @keyframes hit {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.7); }
+      100% { transform: scale(1); }
+    }
+
+    .hole.active .mole img {
+      animation: popUp 0.2s ease-out;
     }
   </style>
-<link type="text/css" rel="stylesheet" charset="UTF-8" href="./打地鼠遊戲_files/m=el_main_css"></head>
+</head>
 <body>
 
-<h1>🐹 打地鼠遊戲（進階版）</h1>
+  <h1>🐹 打地鼠遊戲</h1>
+  <div id="score">分數：0</div>
 
-<div class="panel">
-  <p>📘 本遊戲使用 HTML、CSS、JavaScript 製作</p>
-  <p>🔊 含音效、🎚 難度選擇、🏆 最高分紀錄</p>
-</div>
+  <div class="game">
+    <div class="hole"><div class="mole"><img src="img/download.jpg"></div></div>
+    <div class="hole"><div class="mole"><img src="img/download.jpg"></div></div>
+    <div class="hole"><div class="mole"><img src="img/download.jpg"></div></div>
+    <div class="hole"><div class="mole"><img src="img/download.jpg"></div></div>
+    <div class="hole"><div class="mole"><img src="img/download.jpg"></div></div>
+    <div class="hole"><div class="mole"><img src="img/download.jpg"></div></div>
+    <div class="hole"><div class="mole"><img src="img/download.jpg"></div></div>
+    <div class="hole"><div class="mole"><img src="img/download.jpg"></div></div>
+    <div class="hole"><div class="mole"><img src="img/download.jpg"></div></div>
+  </div>
 
-<div class="info" id="time">剩餘時間：0 秒</div>
-<div class="info" id="score">分數：14</div>
-<div class="info" id="highScore"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">最長時長：14分鐘</font></font></div>
+  <!-- 音效 -->
+  <audio id="hitSound">
+    <source src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" type="audio/ogg">
+  </audio>
 
-<select id="difficulty">
-  <option value="easy">簡單</option>
-  <option value="hard">困難</option>
-</select>
-<br>
-<button onclick="startGame()">開始遊戲</button>
+  <script>
+    const holes = document.querySelectorAll('.hole');
+    const scoreBoard = document.getElementById('score');
+    const hitSound = document.getElementById('hitSound');
 
-<div class="game">
-  <div class="hole"><div class="mole"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🐹</font></font></div></div>
-  <div class="hole"><div class="mole"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🐹</font></font></div></div>
-  <div class="hole"><div class="mole"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🐹</font></font></div></div>
-  <div class="hole"><div class="mole"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🐹</font></font></div></div>
-  <div class="hole"><div class="mole"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🐹</font></font></div></div>
-  <div class="hole"><div class="mole"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🐹</font></font></div></div>
-  <div class="hole"><div class="mole"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🐹</font></font></div></div>
-  <div class="hole"><div class="mole"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🐹</font></font></div></div>
-  <div class="hole"><div class="mole"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">🐹</font></font></div></div>
-</div>
+    let score = 0;
+    let lastHole;
 
-<audio id="hitSound">
-  <source src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" type="audio/ogg">
-</audio>
+    function randomHole() {
+      const hole = holes[Math.floor(Math.random() * holes.length)];
+      if (hole === lastHole) return randomHole();
+      lastHole = hole;
+      return hole;
+    }
 
-<script>
-  const holes = document.querySelectorAll('.hole');
-  const scoreBoard = document.getElementById('score');
-  const timeBoard = document.getElementById('time');
-  const highScoreBoard = document.getElementById('highScore');
-  const hitSound = document.getElementById('hitSound');
-  const difficultySelect = document.getElementById('difficulty');
-
-  let score = 0;
-  let timeLeft = 30;
-  let gameTimer;
-  let moleTimer;
-  let lastHole;
-
-  let highScore = localStorage.getItem('whackHighScore') || 0;
-  highScoreBoard.textContent = '最高分：' + highScore;
-
-  function randomHole() {
-    const hole = holes[Math.floor(Math.random() * holes.length)];
-    if (hole === lastHole) return randomHole();
-    lastHole = hole;
-    return hole;
-  }
-
-  function showMole(speed) {
-    const hole = randomHole();
-    hole.classList.add('active');
-    setTimeout(() => hole.classList.remove('active'), speed);
-  }
-
-  function startGame() {
-    score = 0;
-    timeLeft = 30;
-    scoreBoard.textContent = '分數：0';
-    timeBoard.textContent = '剩餘時間：30 秒';
-
-    clearInterval(gameTimer);
-    clearInterval(moleTimer);
-
-    const difficulty = difficultySelect.value;
-    const moleSpeed = difficulty === 'easy' ? 900 : 500;
-
-    moleTimer = setInterval(() => showMole(moleSpeed), moleSpeed);
-
-    gameTimer = setInterval(() => {
-      timeLeft--;
-      timeBoard.textContent = `剩餘時間：${timeLeft} 秒`;
-      if (timeLeft <= 0) {
-        clearInterval(gameTimer);
-        clearInterval(moleTimer);
-        if (score > highScore) {
-          highScore = score;
-          localStorage.setItem('whackHighScore', highScore);
-          highScoreBoard.textContent = '最高分：' + highScore;
-        }
-        alert('遊戲結束！你的分數是：' + score);
-      }
-    }, 1000);
-  }
-
-  holes.forEach(hole => {
-    hole.addEventListener('click', () => {
-      if (hole.classList.contains('active')) {
-        score++;
-        hitSound.currentTime = 0;
-        hitSound.play();
-        scoreBoard.textContent = `分數：${score}`;
+    function peep() {
+      const hole = randomHole();
+      hole.classList.add('active');
+      setTimeout(() => {
         hole.classList.remove('active');
-      }
+      }, 800);
+    }
+
+    holes.forEach(hole => {
+      hole.addEventListener('click', () => {
+        if (hole.classList.contains('active')) {
+          score++;
+          scoreBoard.textContent = `分數：${score}`;
+
+          hitSound.currentTime = 0;
+          hitSound.play();
+
+          const img = hole.querySelector('img');
+          img.style.animation = 'hit 0.2s';
+
+          setTimeout(() => {
+            img.style.animation = '';
+            hole.classList.remove('active');
+          }, 200);
+        }
+      });
     });
-  });
-</script><div id="goog-gt-tt" class="VIpgJd-yAWNEb-L7lbkb skiptranslate" style="border-radius: 12px; margin: 0 0 0 -23px; padding: 0; font-family: &#39;Google Sans&#39;, Arial, sans-serif;" data-id=""><div id="goog-gt-vt" class="VIpgJd-yAWNEb-hvhgNd"><div class="VIpgJd-yAWNEb-hvhgNd-Ud7fr"><img src="./打地鼠遊戲_files/24px.svg" width="24" height="24" alt=""><div class=" VIpgJd-yAWNEb-hvhgNd-IuizWc-i3jM8c " dir="ltr">原文</div></div><div class="VIpgJd-yAWNEb-hvhgNd-k77Iif"><div id="goog-gt-original-text" class="VIpgJd-yAWNEb-nVMfcd-fmcmS VIpgJd-yAWNEb-hvhgNd-axAV1"></div></div><div class="VIpgJd-yAWNEb-hvhgNd-N7Eqid ltr"><div class="VIpgJd-yAWNEb-hvhgNd-N7Eqid-B7I4Od ltr" dir="ltr"><div class="VIpgJd-yAWNEb-hvhgNd-UTujCb">為這個翻譯評分</div><div class="VIpgJd-yAWNEb-hvhgNd-eO9mKe">你的意見回饋將用於協助改善 Google 翻譯品質</div></div><div class="VIpgJd-yAWNEb-hvhgNd-xgov5 ltr"><button id="goog-gt-thumbUpButton" type="button" class="VIpgJd-yAWNEb-hvhgNd-bgm6sf" title="譯文品質良好" aria-label="譯文品質良好" aria-pressed="false"><span id="goog-gt-thumbUpIcon"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M21 7h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 0S7.08 6.85 7 7H2v13h16c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73V9c0-1.1-.9-2-2-2zM7 18H4V9h3v9zm14-7l-3 7H9V8l4.34-4.34L12 9h9v2z"></path></svg></span><span id="goog-gt-thumbUpIconFilled"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M21 7h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 0S7.08 6.85 7 7v13h11c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73V9c0-1.1-.9-2-2-2zM5 7H1v13h4V7z"></path></svg></span></button><button id="goog-gt-thumbDownButton" type="button" class="VIpgJd-yAWNEb-hvhgNd-bgm6sf" title="譯文品質不佳" aria-label="譯文品質不佳" aria-pressed="false"><span id="goog-gt-thumbDownIcon"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M3 17h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 24s7.09-6.85 7.17-7h5V4H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2zM17 6h3v9h-3V6zM3 13l3-7h9v10l-4.34 4.34L12 15H3v-2z"></path></svg></span><span id="goog-gt-thumbDownIconFilled"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M3 17h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 24s7.09-6.85 7.17-7V4H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2zm16 0h4V4h-4v13z"></path></svg></span></button></div></div><div id="goog-gt-votingHiddenPane" class="VIpgJd-yAWNEb-hvhgNd-aXYTce"><form id="goog-gt-votingForm" action="file://translate.googleapis.com/translate_voting?client=te_lib" method="post" target="votingFrame" class="VIpgJd-yAWNEb-hvhgNd-aXYTce"><input type="text" name="sl" id="goog-gt-votingInputSrcLang"><input type="text" name="tl" id="goog-gt-votingInputTrgLang"><input type="text" name="query" id="goog-gt-votingInputSrcText"><input type="text" name="gtrans" id="goog-gt-votingInputTrgText"><input type="text" name="vote" id="goog-gt-votingInputVote"></form><iframe name="votingFrame" frameborder="0" src="./打地鼠遊戲_files/saved_resource.html"></iframe></div></div></div>
 
+    setInterval(peep, 1000);
+  </script>
 
-
-</body></html>
+</body>
+</html>
